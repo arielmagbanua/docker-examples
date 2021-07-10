@@ -1,0 +1,22 @@
+sudo: required
+services:
+  - docker
+
+before_install:
+  - docker build -t arielmagbanua/docker-udemy-react -f Dockerfile.dev .
+
+script:
+  - docker run arielmagbanua/docker-udemy-react npm run test -- --coverage
+
+deploy:
+  provider: elasticbeanstalk
+  region: us-east-2
+  app: 'docker-udemy-react'
+  env: 'DockerUdemyReact-env'
+  bucket_name: 'elasticbeanstalk-us-east-2-759772833449'
+  bucket_path: 'docker-udemy-react'
+  on:
+    branch: master
+  access_key_id: $AWS_ACCESS_KEY
+  secret_access_key:
+    secure: '$AWS_SECRET_ACCESS_KEY'
